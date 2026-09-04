@@ -1,0 +1,25 @@
+# Rust / Anchor
+/target
+**/*.rs.bk
+Cargo.lock
+.anchor/
+test-ledger/
+
+# Node
+node_modules/
+.wrangler/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.key
+id.json
+keypair*.json
+
+# OS
+.DS_Store
+Thumbs.db
