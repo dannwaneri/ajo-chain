@@ -1,0 +1,11 @@
+{
+  "name": "ajo-chain-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "devnet-smoke-test": "node devnet_smoke_test.mjs"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.0"
+  }
+}
