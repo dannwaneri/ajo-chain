@@ -1,0 +1,20 @@
+skip_local_validator = true
+
+
+[toolchain]
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+ajo_chain = "9RGBLQCcQnsiCdu9RcmEzG4SvihkfTvi1KMz98KCWPoT"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "cargo test"
+
+[hooks]
