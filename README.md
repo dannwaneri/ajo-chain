@@ -22,7 +22,13 @@ Devnet only. No real fund custody.
   Deployed and verified end-to-end on devnet — see
   [`scripts/devnet_smoke_test.mjs`](./scripts/devnet_smoke_test.mjs).
   Program ID: `9RGBLQCcQnsiCdu9RcmEzG4SvihkfTvi1KMz98KCWPoT`
-- ⏳ Day 2 — Gemini dispute adjudication
+- ✅ **Day 2 — Gemini dispute adjudication:** reads real on-chain evidence (group
+  round state + member's recent transaction history) and drafts a
+  plain-language note distinguishing a failed on-chain transfer from a
+  member showing no attempt to pay, for human review before a default is
+  final. Verified on devnet against a real deliberate-default scenario —
+  see [`scripts/gemini/`](./scripts/gemini/) and
+  [`scripts/devnet_default_scenario.mjs`](./scripts/devnet_default_scenario.mjs).
 - ⏳ Day 3 — Cloudflare Worker + D1 orchestration, `/status` page, demo, submission post
 
 **Note:** ElevenLabs voice-only member access was scoped out — see SPEC.md's 2026-09-05 note. Free-tier
