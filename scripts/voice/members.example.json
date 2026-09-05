@@ -1,0 +1,10 @@
+{
+  "_comment": "Copy to members.json and fill in with real devnet pubkeys for the demo group. voiceOnly marks which member has no text fallback — their Telegram chat only ever receives voice notes.",
+  "members": [
+    { "pubkey": "REPLACE_WITH_MEMBER_0_PUBKEY", "name": "Ada", "voiceOnly": true, "telegramChatId": "REPLACE_WITH_CHAT_ID" },
+    { "pubkey": "REPLACE_WITH_MEMBER_1_PUBKEY", "name": "Chidi", "voiceOnly": false },
+    { "pubkey": "REPLACE_WITH_MEMBER_2_PUBKEY", "name": "Ngozi", "voiceOnly": false },
+    { "pubkey": "REPLACE_WITH_MEMBER_3_PUBKEY", "name": "Emeka", "voiceOnly": false },
+    { "pubkey": "REPLACE_WITH_MEMBER_4_PUBKEY", "name": "Blessing", "voiceOnly": false }
+  ]
+}
