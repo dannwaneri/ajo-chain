@@ -2,8 +2,13 @@
 
 ## Context
 DEV Weekend Challenge: Generosity Edition. Deadline: Sep 7, 2026, 6:59 AM UTC.
-Prize categories targeted: Solana, ElevenLabs, Google AI (Gemini) — plus eligible for overall winner.
-Theme ties: Ethical and accountable giving (Solana enforcement); Equity and inclusion (voice-only member access).
+Prize categories targeted: Solana, Google AI (Gemini) — plus eligible for overall winner.
+Theme tie: Ethical and accountable giving (Solana enforcement + Gemini-assisted fair dispute review).
+
+**Scope change (2026-09-05):** ElevenLabs / voice-only member access was cut. ElevenLabs' free tier
+blocks API access to any premade/library voice (only self-cloned voices or a paid plan work), and after
+working through account setup, key permissions, and a failed Instant Voice Clone save, it wasn't worth
+the remaining time against the deadline. Section 3 below is kept for the record; it was not built.
 
 ## Concept
 Digitize ajo/esusu, the West African rotating savings circle. A fixed group of 5 members contributes a
@@ -28,35 +33,28 @@ break — or just look less polished? Only ship features that break something re
 
 ### 2. Cloudflare Worker + D1 — orchestration layer
 - D1 schema: `groups` (id, rotation_order, contribution_amount, round_number), `members` (id, group_id,
-  wallet_address, telegram_id, is_voice_only), `rounds` (id, group_id, round_number, status), `defaults`
+  wallet_address, telegram_id), `rounds` (id, group_id, round_number, status), `defaults`
   (id, member_id, round_id, evidence, adjudication_status).
 - Worker reads on-chain program state, writes status to D1, triggers notifications.
 - Public `/status` page: rotation order, per-round contribution status, links to Solana Explorer devnet
   tx pages for every transaction. This page is the transparency proof for judging.
 
-### 3. ElevenLabs — voice-only member access (load-bearing, not a duplicate channel)
-- One designated member in the demo group is voice-only: no text fallback, ElevenLabs voice note is
-  their only interface to round status (contribution confirmed, round complete, payout released,
-  default flagged), delivered via Telegram voice note.
-- Language: Igbo, Yoruba, or Pidgin (pick one for the demo).
-- Deleting this feature locks that member out of the circle entirely — that's the load-bearing test passing.
+### 3. ElevenLabs — voice-only member access — CUT, not built
+- Originally: one designated member with no text fallback, ElevenLabs voice note as their only interface
+  to round status, delivered via Telegram voice note. Cut per the 2026-09-05 scope change above.
 
-### 4. Gemini — voice interpretation + dispute adjudication (load-bearing, one agent, two triggers)
-- Trigger 1: transcribes and interprets the voice-only member's spoken replies into structured actions
-  (confirm contribution, flag a problem).
-- Trigger 2: on any disputed default, reviews on-chain evidence (failed tx logs, timing, wallet history)
-  and drafts a plain-language note distinguishing "transfer failed on-chain" from "member walked away,"
-  for human review in Telegram before the default is finalized.
-- Keep scope narrow — do not let this become a general chatbot. Two triggers only.
+### 4. Gemini — dispute adjudication (load-bearing, one agent, one trigger)
+- On any disputed default, reviews on-chain evidence (failed tx logs, timing, wallet history) and drafts
+  a plain-language note distinguishing "transfer failed on-chain" from "member walked away," for human
+  review in Telegram before the default is treated as final.
+- Keep scope narrow — do not let this become a general chatbot. One trigger only.
 
 ## 3-day build order (strict priority — do not parallelize)
-1. Day 1: Anchor program only. Full devnet test cycle. Stop here once solid.
-2. Day 2 AM: ElevenLabs voice-status pipeline for the voice-only member.
-3. Day 2 PM: Gemini — transcription/interpretation trigger, then dispute-adjudication trigger. If time
-   runs short, cut this cleanly rather than rushing it — Solana + ElevenLabs alone is already a complete,
-   coherent, non-generic submission.
-4. Day 3: Full integration demo (contribute → voice confirmation → payout → forced default → Gemini
-   adjudication note), demo video, submission post.
+1. Day 1: Anchor program only. Full devnet test cycle. Stop here once solid. — DONE
+2. Day 2: Gemini dispute-adjudication trigger. If time runs short, cut this cleanly rather than rushing
+   it — the Solana core alone is already a complete, coherent, non-generic submission.
+3. Day 3: Cloudflare Worker + D1, `/status` page, full integration demo (contribute → forced default →
+   Gemini adjudication note → payout), demo video, submission post.
 
 ## Rules to keep in mind
 - New project only, built entirely within the challenge window (Sep 3–7). Commit history is reviewed.
@@ -65,7 +63,8 @@ break — or just look less polished? Only ship features that break something re
   wins are capped at one per challenge.
 
 ## Submission post framing
-Lead with the real trust problem in ajo (pot holder absconding, post-payout dropout). Present the three
-technologies as one coherent mechanism, not three demos bolted together: Solana = enforcement layer,
-ElevenLabs = accessibility layer, Gemini = fairness layer. Explicitly name the UN theme framing DEV cited
-(ethical/accountable giving, equity/inclusion) to show direct relevance, not retrofitted language.
+Lead with the real trust problem in ajo (pot holder absconding, post-payout dropout). Present the two
+technologies as one coherent mechanism, not two demos bolted together: Solana = enforcement layer,
+Gemini = fairness layer (it can't stop a missed contribution, but it can tell "transfer failed on-chain"
+apart from "member walked away" before a default is treated as final). Name the UN theme framing DEV
+cited (ethical/accountable giving) to show direct relevance, not retrofitted language.

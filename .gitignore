@@ -19,7 +19,6 @@ npm-debug.log*
 *.key
 id.json
 keypair*.json
-scripts/voice/members.json
 
 # OS
 .DS_Store
