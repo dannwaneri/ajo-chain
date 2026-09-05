@@ -17,4 +17,12 @@ Devnet only. No real fund custody.
 
 ## Status
 
-Build in progress — see commit history.
+- ✅ **Day 1 — Solana program (core, load-bearing):** `create_group`, `contribute`,
+  `mark_default`, `release_payout` implemented and tested (litesvm: happy-path
+  round, deliberate default, non-member/double-contribution rejection).
+  Deployed and verified end-to-end on devnet — see
+  [`scripts/devnet_smoke_test.mjs`](./scripts/devnet_smoke_test.mjs).
+  Program ID: `9RGBLQCcQnsiCdu9RcmEzG4SvihkfTvi1KMz98KCWPoT`
+- ⏳ Day 2 — ElevenLabs voice-only member access
+- ⏳ Day 2 — Gemini transcription + dispute adjudication
+- ⏳ Day 3 — Cloudflare Worker + D1 orchestration, `/status` page, demo, submission post
