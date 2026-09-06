@@ -38,6 +38,13 @@ only instruction that pays lamports out of escrow.
 - Repeated calls: should be idempotent (already-defaulted members aren't re-flagged, no error
   either way — confirm this doesn't panic or double-emit events in a way that misleads the Worker's
   D1 sync).
+- **Known limitation, not a fund-safety bug**: the loop only flags member `i` when
+  `!has_contributed[i] && !defaulted[i]`. Once `defaulted[i]` is set, it's permanent (correct — the
+  spec requires a permanent record), but it also means `mark_default` never re-checks that member
+  again in any later round. A member who defaults in round 0 and then also misses round 2's and
+  round 4's deadlines produces no new event and no way to distinguish "defaulted once" from
+  "defaulted repeatedly" from on-chain state. `defaulted[5]` is a boolean, not a per-round audit
+  trail. No funds are at risk from this — it's a granularity gap, not an exploit.
 
 `create_group.rs`:
 - Duplicate members (including a member appearing twice): expect `InvalidMembers`.
@@ -77,3 +84,19 @@ those three tests miss.
 - Devnet only — no mainnet deployment, no real fund custody, explicitly stated in the submission.
 - ElevenLabs voice-only member access was scoped out entirely (see `SPEC.md`) — nothing to test there.
 - The Worker's Gemini/Telegram secrets are not in the repo; don't waste time looking for them there.
+
+## Review status (2026-09-06)
+
+An automated adversarial-testing agent (Antigravity) declined to run this brief, flagging
+"adversarial testing," "vulnerability analysis," and "attack verification" as requests it won't
+fulfill regardless of authorization context. Rather than reword the ask to route around that
+classifier, this list was walked manually against the current code instead. Findings:
+
+- Every Priority 1 scenario checked out: recipient validated before transfer, all-contributed
+  checked before transfer, double-payout blocked by the `has_contributed` reset, overflow guarded
+  by `checked_mul`, `completed` checked before any array indexing (no panic path), duplicate/zero
+  member checks correct, PDA collision only possible against your own prior group.
+- One real finding: the repeat-defaults granularity gap in `mark_default.rs`, documented above.
+  Not a fund-safety issue; left as a known limitation rather than fixed under deadline pressure.
+- Priority 2 items (Worker auth, dispute-integrity) remain accepted gaps for a devnet hackathon
+  demo, as originally scoped — nothing new found there beyond the XSS fix already shipped.
