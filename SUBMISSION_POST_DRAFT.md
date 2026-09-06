@@ -22,10 +22,7 @@ Live transparency page, still on devnet, walking a real completed round (four me
 
 https://ajo-chain-worker.fpl-test.workers.dev/status/3XrTDiMxhznfBZLMxDrEVndP8YKwR1kCaN9HpeUxGRne
 
-{% youtube VIDEO_ID_HERE %}
-<!-- Upload the narrated MP4 to YouTube (unlisted is fine) and paste the video ID above,
-     or drag the MP4 file directly into the DEV.to editor -- it uploads to their own CDN
-     and inserts the embed automatically. Either way, remove this comment before publishing. -->
+{% youtube fzJFBgV5Uh4 %}
 
 ## Code
 
