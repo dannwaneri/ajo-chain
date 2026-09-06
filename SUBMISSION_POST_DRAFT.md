@@ -6,6 +6,8 @@ My late grandmother was a trader. She ran ajo for years, the way a lot of Nigeri
 
 That's the actual failure mode. Not fraud, most of the time. Just one person holding money that isn't theirs, under pressure, with no enforcement above their own word.
 
+DEV framed this challenge around ethical and accountable giving, and equity and inclusion. Ajo isn't charity. Nobody donates and walks away. Every member eventually gets their own money back, plus one round early. But it's the original financial-inclusion tool for people the banks never served: market traders, mostly women, building credit and liquidity together because nobody else would. My grandmother didn't have a bank account for this. She had her circle.
+
 Ajo Chain is my answer to that specific story. Before I wrote a line of code, I set one rule: if you deleted a technology, would something actually break, or would the project just look less polished? Everything that failed that test got cut. One whole technology did, and I'll get to why.
 
 Ajo (also called esusu) is a rotating savings circle. Five people, one fixed amount each round, one payout that rotates to a different person every round.
