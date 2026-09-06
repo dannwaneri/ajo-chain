@@ -29,7 +29,14 @@ Devnet only. No real fund custody.
   final. Verified on devnet against a real deliberate-default scenario —
   see [`scripts/gemini/`](./scripts/gemini/) and
   [`scripts/devnet_default_scenario.mjs`](./scripts/devnet_default_scenario.mjs).
-- ⏳ Day 3 — Cloudflare Worker + D1 orchestration, `/status` page, demo, submission post
+- ✅ **Day 3 — Cloudflare Worker + D1 orchestration + public status page:**
+  `POST /sync` indexes a group's on-chain state and transaction log into D1;
+  `POST /disputes` runs the Gemini trigger and stores the result;
+  `GET /status/:group` is the public transparency page. Deployed at
+  https://ajo-chain-worker.fpl-test.workers.dev — see
+  [`worker/`](./worker/). Live example:
+  https://ajo-chain-worker.fpl-test.workers.dev/status/EkM468mabv127E6jwrcLrhSEmFWShdU3drFAm2uRCLwH
+- ⏳ Demo video, submission post
 
 **Note:** ElevenLabs voice-only member access was scoped out — see SPEC.md's 2026-09-05 note. Free-tier
 API access blocks premade voices; not worth the remaining time against the deadline.
