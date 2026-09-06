@@ -18,6 +18,18 @@ function html(body) {
   return new Response(body, { headers: { "content-type": "text/html;charset=UTF-8" } });
 }
 
+// The status page is public and unauthenticated (anyone can POST /disputes),
+// so anything not verified to be a real base58 pubkey/signature -- notably
+// Gemini's free-form note text -- must be escaped before going into HTML.
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 async function handleSync(request, env) {
   const { groupPubkey } = await request.json();
   if (!groupPubkey) return json({ error: "groupPubkey required" }, 400);
@@ -146,7 +158,7 @@ function renderStatusPage({ groupPubkey, group, members, transactions, disputes 
       const isNext = group && !group.completed && m.idx === group.round_number;
       return `<tr class="${isNext ? "next" : ""}">
         <td>${m.idx + 1}</td>
-        <td><code>${m.wallet_address}</code></td>
+        <td><code>${escapeHtml(m.wallet_address)}</code></td>
         <td>${m.has_contributed ? "✅ contributed" : "⬜ pending"}</td>
         <td>${m.defaulted ? "🚩 defaulted (permanent record)" : "—"}</td>
         <td>${isNext ? "→ next payout" : ""}</td>
@@ -158,7 +170,7 @@ function renderStatusPage({ groupPubkey, group, members, transactions, disputes 
     .map(
       (t) =>
         `<tr><td>${t.block_time ? new Date(t.block_time * 1000).toISOString() : "unknown"}</td>
-         <td><a href="${explorerTx(t.signature)}" target="_blank" rel="noopener">${t.signature.slice(0, 16)}…</a></td>
+         <td><a href="${explorerTx(t.signature)}" target="_blank" rel="noopener">${escapeHtml(t.signature.slice(0, 16))}…</a></td>
          <td>${t.err ? "❌ failed" : "✅ success"}</td></tr>`
     )
     .join("\n");
@@ -166,8 +178,8 @@ function renderStatusPage({ groupPubkey, group, members, transactions, disputes 
   const disputeRows = disputes
     .map(
       (d) =>
-        `<tr><td>${d.member_wallet.slice(0, 8)}…</td><td>${d.round_number}</td><td>${d.status}</td>
-         <td style="white-space:pre-wrap">${d.note}</td></tr>`
+        `<tr><td>${escapeHtml(d.member_wallet.slice(0, 8))}…</td><td>${escapeHtml(d.round_number)}</td><td>${escapeHtml(d.status)}</td>
+         <td style="white-space:pre-wrap">${escapeHtml(d.note)}</td></tr>`
     )
     .join("\n");
 
@@ -185,7 +197,7 @@ a{color:#5145f0}
 </style></head>
 <body>
 <h1>Ajo Chain — Group Transparency</h1>
-<p><span class="pill">devnet</span> Group: <a href="${explorerAddress(groupPubkey)}" target="_blank">${groupPubkey}</a></p>
+<p><span class="pill">devnet</span> Group: <a href="${explorerAddress(groupPubkey)}" target="_blank">${escapeHtml(groupPubkey)}</a></p>
 ${
   group
     ? `<p>Round ${group.round_number + 1} of 5 &middot; ${group.completed ? "✅ circle complete" : "in progress"} &middot; contribution ${group.contribution_amount_lamports} lamports/round</p>`
