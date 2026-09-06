@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ajo-chain-worker",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ajo-chain-db",
+      "database_id": "7cdf4102-5a74-417e-b222-61a87bfb7b55"
+    }
+  ],
+  "vars": {
+    "PROGRAM_ID": "9RGBLQCcQnsiCdu9RcmEzG4SvihkfTvi1KMz98KCWPoT"
+  }
+}
