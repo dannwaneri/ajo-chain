@@ -22,7 +22,10 @@ Live transparency page, still on devnet, walking a real completed round (four me
 
 https://ajo-chain-worker.fpl-test.workers.dev/status/3XrTDiMxhznfBZLMxDrEVndP8YKwR1kCaN9HpeUxGRne
 
-<!-- Video embed goes here -->
+{% youtube VIDEO_ID_HERE %}
+<!-- Upload the narrated MP4 to YouTube (unlisted is fine) and paste the video ID above,
+     or drag the MP4 file directly into the DEV.to editor -- it uploads to their own CDN
+     and inserts the embed automatically. Either way, remove this comment before publishing. -->
 
 ## Code
 
@@ -34,9 +37,35 @@ Program ID: `9RGBLQCcQnsiCdu9RcmEzG4SvihkfTvi1KMz98KCWPoT`
 
 ### Solana is the enforcement layer
 
-This is the only part I'd call load-bearing without qualification. Each group gets an escrow PDA and a fixed rotation order set once at creation. Four instructions: `create_group`, `contribute`, `mark_default`, `release_payout`. `release_payout` won't move a lamport until all five members have contributed, and it pays out to exactly one address: whoever is next in the array, checked directly in the handler, not just in an account constraint I could talk myself into trusting. Delete this layer and you're back to trusting one person with the pot. That's the whole reason the project exists.
+This is the only part I'd call load-bearing without qualification. Each group gets an escrow PDA and a fixed rotation order set once at creation. Four instructions: `create_group`, `contribute`, `mark_default`, `release_payout`. `release_payout` won't move a lamport until all five members have contributed, and it pays out to exactly one address: whoever is next in the array, checked directly in the handler, not just in an account constraint I could talk myself into trusting.
 
-I tested it with litesvm instead of a local validator. Three tests, in-process, no faucet, no network: a full happy-path round, a deliberate default followed by a late catch-up that still completes the round, and rejection of non-members and double-contributions. Then I deployed to devnet and ran the same story for real, five contributions and one payout, with real signatures and real Explorer links. Somewhere in there I also learned that `api.devnet.solana.com` blocks Cloudflare's IP ranges outright, which nobody documents until you hit it. QuickNode's free devnet endpoint doesn't have that problem.
+```rust
+require!(
+    group.has_contributed.iter().all(|&c| c),
+    AjoError::NotAllContributed
+);
+require!(
+    ctx.accounts.recipient.key() == group.members[group.round_number as usize],
+    AjoError::InvalidRecipient
+);
+```
+
+Both checks run before the transfer, not after. There's no `recipient` field a caller controls; the address is read out of the group's own on-chain state. Delete this layer and you're back to trusting one person with the pot. That's the whole reason the project exists.
+
+I tested it with litesvm instead of a local validator. Three tests, in-process, no faucet, no network: a full happy-path round, a deliberate default followed by a late catch-up that still completes the round, and rejection of non-members and double-contributions.
+
+```
+running 3 tests
+test deliberate_default_is_flagged_and_blocks_payout ... ok
+test full_round_cycle_pays_correct_rotation_member ... ok
+test rejects_non_members_and_double_contribution ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s
+```
+
+Full source in [`programs/ajo_chain/tests/ajo_chain_test.rs`](https://github.com/dannwaneri/ajo-chain/blob/main/programs/ajo_chain/tests/ajo_chain_test.rs) if you want to run it yourself: `cargo test --manifest-path programs/ajo_chain/Cargo.toml`.
+
+Then I deployed to devnet and ran the same story for real, five contributions and one payout, with real signatures and real Explorer links. Somewhere in there I also learned that `api.devnet.solana.com` blocks Cloudflare's IP ranges outright, which nobody documents until you hit it. QuickNode's free devnet endpoint doesn't have that problem.
 
 ### Gemini is the fairness layer, and I'm going to undersell it on purpose
 
