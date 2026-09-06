@@ -2,9 +2,13 @@ This is a submission for [Weekend Challenge: Generosity Edition](https://dev.to/
 
 ## What I Built
 
-Before I wrote a line of code, I set one rule: if you deleted a technology, would something actually break, or would the project just look less polished? Everything that failed that test got cut. One whole technology did, and I'll get to why.
+My late grandmother was a trader. She ran ajo for years, the way a lot of Nigerian market women did, and used her payout round to restock her shop. More stock meant more sales meant more saved for the next round. It worked, until the round it didn't: she told me about a time the person holding the pot borrowed against it to solve a family problem and couldn't pay it back in time. He didn't vanish maliciously. He just couldn't make the group whole again, and the circle absorbed the loss.
 
-Ajo (also called esusu) is a rotating savings circle. Five people, one fixed amount each round, one payout that rotates to a different person every round. It's one of the oldest mutual-aid structures in West African community life, and it has exactly one real failure mode: the person holding the pot disappears with it, or someone stops paying once they've already collected their payout.
+That's the actual failure mode. Not fraud, most of the time. Just one person holding money that isn't theirs, under pressure, with no enforcement above their own word.
+
+Ajo Chain is my answer to that specific story. Before I wrote a line of code, I set one rule: if you deleted a technology, would something actually break, or would the project just look less polished? Everything that failed that test got cut. One whole technology did, and I'll get to why.
+
+Ajo (also called esusu) is a rotating savings circle. Five people, one fixed amount each round, one payout that rotates to a different person every round.
 
 Ajo Chain doesn't digitize the spreadsheet. It replaces the one person everyone has to trust with a Solana program that can't disappear. Escrow, rotation order, and default tracking all live on-chain. Contributions only release to the next member in the fixed order, and only once all five have paid. A missed deadline gets flagged permanently. It's visible forever, not something a moderator can quietly erase later.
 
@@ -36,7 +40,7 @@ I tested it with litesvm instead of a local validator. Three tests, in-process, 
 
 ### Gemini is the fairness layer, and I'm going to undersell it on purpose
 
-It reads the group's on-chain round state plus the disputed member's recent transaction history, then drafts a short note: did the evidence show an attempt that failed, or no attempt at all? Two different load-bearing questions here, and they get two different answers. For the project as a whole: no, delete Gemini and the Solana program is untouched, nobody loses money, nobody gets locked out. For the dispute-adjudication feature itself: yes. Delete Gemini and a real ajo moderator is staring at raw transaction signatures and `err` fields, trying to work out whether someone tried and failed or just didn't show up. That's not information a non-technical person can act on. The feature doesn't survive losing it. The product does.
+It reads the group's on-chain round state plus the disputed member's recent transaction history, then drafts a short note: did the evidence show an attempt that failed, or no attempt at all? That's my grandmother's story again, the same question a human circle asked about the same kind of person, just with transaction signatures instead of memory and reputation. Two different load-bearing questions here, and they get two different answers. For the project as a whole: no, delete Gemini and the Solana program is untouched, nobody loses money, nobody gets locked out. For the dispute-adjudication feature itself: yes. Delete Gemini and a real ajo moderator is staring at raw transaction signatures and `err` fields, trying to work out whether someone tried and failed or just didn't show up. That's not information a non-technical person can act on. The feature doesn't survive losing it. The product does.
 
 ### Cloudflare Worker + D1 makes the first two legible to a human
 
